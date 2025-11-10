@@ -1,0 +1,262 @@
+---
+title: "Homework 2"
+author: "Noah Duran"
+date: "Assigned: 29 Oct"
+output: 
+  html_document:
+    theme: paper
+    highlight: tango
+---
+
+## To complete this assignment, follow these steps:
+
+1. Download the `HW2.Rmd` file from Canvas.
+2. Open `HW2.Rmd` in RStudio.
+3. Replace the "your name here" text in the `author:` field with your own name.
+4. Supply your solutions to the homework by editing `HW2.Rmd`.
+5. When you have completed the homework and have **checked** that your code both runs in the Console and knits correctly when you click `Knit HTML`, save the html file as `HW2_YourAndrewIDHere.html`, and submit on Canvas.  (YourAndrewIDHere should be changed to your Andrew ID, of course.)
+
+## Homework tips:
+
+1. Instead of sending code line-by-line with `<ctrl-enter>`, you can send entire code chunks, and even run all of the code chunks in your .Rmd file. Look under the <Chunks> menu of the Source panel.
+2. Run your code in the Console and Knit HTML frequently to check for errors.
+3. You may find it easier to solve a problem by interacting only with the Console at first. 
+
+## Homework 2 outline
+
+## Problem 1: Simple Boolean operations
+
+> Tip: To check that your answer makes sense, you may want to try it out in the console with various choices of values for the variable `x`.   
+
+## (a) Checking equality.
+
+Define a variable `x` and write a Boolean expression that evaluates to `TRUE` if the variable `x` is equal to `9452` (the numeric value).  
+
+```{r question 1a}
+# Insert your Boolean expression here
+x <- 9452
+
+print(x == 9452)
+
+```
+
+## (b) Checking inequality.
+
+Given any variable `x`, write a Boolean expression that evaluates to `TRUE` if the variable `x` is *not* `NA` (i.e., is not missing).
+
+```{r question 1b}
+# Insert your Boolean expression here
+x <- 123
+!is.na(x)
+
+```
+
+## (c) Checking if a number is in a given range. 
+
+Given a (possibly negative) number `x`, write a Boolean expression that returns `TRUE` if and only if `x` is less than `-6` OR greater than `11`.  
+
+```{r question 1c}
+# Insert your Boolean expression here
+x <- 14
+print(x < -6 | x > 11)
+
+```
+
+## Problem 2: Multiple Boolean operations
+
+## (a) select multiple values from a vector.  
+
+A numeric vector v is defined in the code chunk below. Create a second vector v1 using a Boolean expression with only those values between 5 and 10 and secondly determine the length of this new vector.
+
+```{r question 2a}
+# numeric vector definition
+v <- c(6, 10, 2, 11, 7, 12, 4, 5, 1, 1, 9, 8, 11, 5, 6, 7, 1, 2, 10, 12)
+# Insert your Boolean expression here to calculate v1
+v1 <- v[v > 5 & v < 10] 
+#if the values between 5 and 10 should be inclusive the code would be 
+# v1 <- v[v >= 5 & v <= 10]
+# determine the length of vector v1
+length(v1)
+```
+
+## (b) Using `all()`
+
+Two people were asked to give their preferences between two options: [Facebook, Twitter], [Firefox, Chrome], [Mac, PC], [Spring, Fall].  Their results are given below.
+
+```{r question 2b}
+alice_prefs <- c("Twitter", "Chrome", "Mac", "Spring")
+bob_prefs <- c("Facebook", "Chrome", "PC", "Fall")
+```
+
+Use the `all()` function to determine if the two people have identical preferences. (Your code should output a single Boolean value, either `TRUE` or `FALSE`)
+
+```{r question 2b-2}
+# Edit me
+print(all(alice_prefs == bob_prefs))
+```
+
+## (c) Using `any()` 
+
+Use the `any()` function to determine if the two people have any preferences in common.  (Your code should output a single Boolean value, either `TRUE` or `FALSE`)
+
+```{r question 2c}
+# Edit me
+print(any(alice_prefs == bob_prefs))
+
+```
+
+## (d) Missing values.
+
+Let `age` be the vector defined below.
+
+```{r question 2d}
+age <- c(18, 17, 25, 34, NA, 45, NA, 45, 50, NA, 19, 18, 22)
+```
+
+Write a Boolean expression that checks whether each entry of `age` is missing (recall missing values are denoted by `NA`).  Your expression should return a Boolean vector having the same length as the `age` vector.
+
+```{r question 2d end}
+# Edit me
+is.na(age)
+```
+
+## Problem 3: Referencing vector elements
+
+## (a) `which()` practice
+
+Write code that returns the indices of the `age` vector that are missing.
+
+```{r question 3a}
+# Edit me
+which(is.na(age))
+```
+
+## (b) Getting non-missing values
+
+Write code that uses negative indexes and your solution from (a) to return only the values of `age` that are *not* missing. (i.e., your code should result in a vector with elements: 18, 17, 25, 34, 45, 45, 50, 19, 18, 22
+
+
+```{r question 3b}
+# Edit me
+negative.index.age <- which(is.na(age))
+age[-negative.index.age]
+```
+
+## (c)  A more direct way of getting non-missing values
+
+Using the negation operator `!` and the `is.na()` function, write an expression that returns only the values of `age` that are *not* missing.
+
+```{r question 3c}
+# Edit me
+age[!is.na(age)]
+```
+
+## (d) More `which()` practice
+
+The next few questions use the built-in `cars` data set.
+
+```{r question 3d}
+speed <- cars$speed
+dist <- cars$dist
+```
+
+Write code to determine which of the entries in cars has a stopping distance (dist) of 40 feet or more.
+
+```{r question 3d-2}
+# Edit me
+dist.over40 <- cars$dist >= 40
+print(dist.over40)
+
+```
+
+## (e) `which.min`, `which.max` practice
+
+Use the `which.min()` function to figure out which car had the *shortest* stopping distance. (Your code should return the car's index.)
+
+```{r question 3e}
+# Edit me
+which.min(dist)
+```
+
+## (f) More practice 
+
+Use the `which.max()` function to figure out the *speed* of the car that had the *longest* stopping distance.  (Your code should return the car's speed.)
+
+```{r question 3f}
+# Edit me
+which.max(dist)
+```
+
+## Problem 4: Data frame basics
+
+## (a) Importing data
+
+Use the `read.csv()` function to import the `survey.csv` dataset into a variable called `survey`.
+
+```{r question 4a}
+# Edit me
+survey <- read.csv("~/Desktop/Masters Degree/R Programming/datasets/survey.csv", header=TRUE, sep=",", stringsAsFactors = TRUE)
+```
+
+**Tip**: The csv data file called `survey.csv` is available on Canvas.  You may download the file to a directory on your machine then import it.
+
+## (b) `$` notation
+
+Use the `$` operator to select and return the contents of the studyhours column from the `survey` dataset
+
+```{r question 4b}
+# Edit me
+print(survey$StudyHours)
+```
+
+## (c) [,] notation
+
+Repeat part (b) using `[]` notation.  i.e., Use `[]` notation to select the studyhours column from the `survey` data by position (i.e., obtain this column by using the proper column number)
+
+```{r question 4c}
+# Edit me
+print(survey[, 8])
+```
+
+## (d) [[]] notation
+
+Repeat part (c) with [[]] notation.
+
+```{r question 4d}
+# Edit me
+print(survey[["StudyHours"]])
+```
+
+## (e) `subset()` practice
+
+Use the `subset()` function to select all the survey data on Program and OperatingSystem for respondents whose Rexperience is "Never used" *OR* who studied 6 or less hours per week.
+
+```{r question 4e}
+# Edit me
+subset(survey, 
+       select=c("OperatingSystem", "Program"), 
+       Rexperience == "Never used" | StudyHours <= 6)
+
+```
+
+## Problem 5: Data summaries and inline code practice.
+
+## (a) Bar graph
+
+Create a bar graph of respondents' Rexperience.
+
+```{r question 5a, fig.align='center', fig.width=7, fig.height=4}
+# Edit me
+plot(survey$Rexperience,
+    main = "Student Experience with R",
+    xlab = "Experience Level",
+    ylab = "Number of responses")
+```
+
+## (b) Inline code practice
+
+Replace all occurrences of ???? in the paragraph below with inline code supplying the appropriate information.
+
+> Of the `r ncol(survey)` respondents, `r sum(survey[["Program"]] != "MISM")` were NOT from the MISM program.  We found that `r mean(survey[["OperatingSystem"]] == "Mac OS") * 100`% of the all students in the class use the Mac OS X operating system.  `r mean(survey[["Rexperience"]][survey[["Program"]] == "MISM"] == "Basic competence") * 100`% of the MISM students report having Basic competence in R.
+
+

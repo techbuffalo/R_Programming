@@ -1,0 +1,255 @@
+---
+title: "Homework 3"
+author: "Noah Duran"
+date: 'Assigned: Nov 5, 2025'
+output: 
+  html_document:
+    toc: true
+    toc_depth: 3
+    theme: paper
+    highlight: tango
+---
+
+### To complete this assignment, follow these steps:
+
+1. Download the `HW3.Rmd` file from Canvas or the course website.
+2. Open `HW3.Rmd` in RStudio.
+3. Replace the "Your Name Here" text in the `author:` field with your own name.
+4. Supply your solutions to the homework by editing `HW3.Rmd`.
+5. When you have completed the homework and have **checked** that your code both runs in the Console and knits correctly when you click `Knit HTML`, save the html file named with your Andrew ID, and submit on Canvas.
+
+### Problem 1: table(), tapply()
+
+We'll start by downloading a publicly available dataset that contains some census data information.  This dataset is called `income` and is available on Canvas in the files section.
+
+```{r question 1}
+# Edit me to import the datafile named "income_data.csv" on Canvas using read.csv (hint you can used Import Dataset tool to provide the code)
+incomeData <- read.csv("/Users/noahduran/Desktop/Masters Degree/R Programming/datasets/income_data.csv")
+```
+
+##### (a) table()
+
+Use the `table()` function to produce a contingency table of observation counts across **marital.status** and **sex**.
+
+```{r question 1a}
+# Edit me
+contingencyTable <- table(incomeData$marial.status, incomeData$sex)
+```
+
+##### (b)  The `prop.table()` function calculates a table of proportions from a table of counts.  Read the documentation for this function to see how it works.  Use `prop.table()` and your table from problem **(a)** to form a (column) proportions table.  The female column of the table should show the proportion of women in each marital status category.  The male column will show the same, but for men.
+
+
+```{r question 1b}
+# Edit me
+prop.table(contingencyTable, margin = 2)
+
+married.Female <- sum(prop.table(contingencyTable, margin = 2)["Married-AF-spouse", "Female"],
+                      prop.table(contingencyTable, margin = 2)["Married-civ-spouse", "Female"],
+                      prop.table(contingencyTable, margin = 2)["Married-spouse-absent", "Female"])
+
+married.Male <- sum(prop.table(contingencyTable, margin = 2)["Married-AF-spouse", "Male"],
+                      prop.table(contingencyTable, margin = 2)["Married-civ-spouse", "Male"],
+                      prop.table(contingencyTable, margin = 2)["Married-spouse-absent", "Male"])
+
+widowed.Female <- prop.table(contingencyTable, margin = 2)["Widowed", "Female"]
+widowed.Male <- prop.table(contingencyTable, margin = 2)["Widowed", "Male"]
+```
+
+##### (c)  Use part (b) to answer the following questions. In this data set, are women more or less likely than men to be married?  Are women more or less likely to be Widowed?  (As part of your answer, calculate the % of individuals in each group who report being married, and the % who report being widowed.  Use inline code chunks when reporting these values.)
+
+
+<font color="#157515"><b>
+
+According to this data set, women are `r round(married.Female * 100, 2)`% likely to be married, coming in lower than the male percentage of `r round(married.Male * 100, 2)`%. Women are more likely than men to become widowed however, coming in at `r round(widowed.Female * 100, 2)`% compared to the males who come in at `r round(widowed.Male * 100, 2)`%.
+
+</font></b>
+
+##### (d) tapply()
+
+Use the `tapply()` function to produce a table showing the average **age** (in years) across **marital status** and **sex** categories.
+
+```{r question 1d}
+# Edit me
+tapply(incomeData$age, incomeData$marial.status, mean)
+tapply(incomeData$age, incomeData$sex, mean)
+```
+
+### Problem 2: A more complex `tapply()` example (calculating Claims per Holder)
+
+The `MASS` package contains a dataset called `Insurance`.  Read the help file on this data set to understand its contents.
+
+#####(a) Total number of Holders by District and Age
+
+Use the `tapply()` function to produce a table showing the **total number of Holders** across **District** and **Age**.  Save this table in a variable named `holders_table`, and also display your answer.
+
+```{r question 2a}
+# Edit me
+library(MASS)
+data(Insurance)
+
+holders_table <- tapply(Insurance$Holders, list(Insurance$District, Insurance$Age), sum)
+print(holders_table)
+```
+
+#####(b) Total number of Claims by District and Age
+
+Use the `tapply()` function to produce a table showing the **total number of Claims** across **District** and **Age**.  Save this table in a variable named `claims_table`, and also display your answer.
+
+```{r question 2b}
+# Edit me
+library(MASS)
+data(Insurance)
+
+claims_table <- tapply(Insurance$Claims, list(Insurance$District, Insurance$Age), sum)
+print(claims_table)
+```
+
+#####(c) Rate of Claims per Holder by District and Age
+
+Use your answers from parts **(a)** and **(b)** to produce a table that shows the rate of **Claims per Holder** across **District** and **Age**. 
+
+```{r question 2c}
+# Edit me
+claims.per.holder <- claims_table / holders_table
+round(claims.per.holder,3)
+```
+
+Tip: *If an insurance company has 120,000 policy holders and receives 14,000 claims, the rate of claims per holder is 14000/120000 = `r round(14000/120000,3) `*
+
+#####(d) Do you observe any trends in how the number of claims per holder varies with age?  
+
+<font color="#157515"><b>
+
+As the age increases the number of claims per holder decreases, with the only exception being those 30-35 in district 4.
+
+</font></b>
+
+### Problem 3: There are strings in a numeric column
+
+This exercise will give you practice with two of the most common data cleaning tasks.  For this problem we'll use the `survey_untidy.csv` data set posted on the course Canvas site.  Begin by importing this data into R.
+
+```{r question 3}
+# Edit me to import the datafile named "survey_untidy.csv" on Canvas 
+untidySurvey <- read.csv("/Users/noahduran/Desktop/Masters Degree/R Programming/datasets/survey_untidy.csv")
+
+# Edit me to also check the structure of the imported dataset
+str(untidySurvey)
+```
+##### (a) study hours column
+
+Note the format of the `StudyHours` column. Use the `as.numeric()` command to coerce the `StudyHours` vector to numeric values (check the help section is you are unclear about the syntax). HINT - You also need to pre-process some of the values "manually" first - how you do this is up to you, there are many different ways of making all the values numeric.
+
+```{r question 3a}
+# Edit me
+
+#Checking what within the StudyHours column are registering as unique inputs
+unique(untidySurvey$StudyHours)
+
+#Manually changing the non-numeric inputs and decimals to whole numbers
+untidySurvey$StudyHours[untidySurvey$StudyHours == "thirteen"] <- 13
+untidySurvey$StudyHours[untidySurvey$StudyHours == "less than 50"] <- 49
+untidySurvey$StudyHours[untidySurvey$StudyHours == "about 65"] <- 65
+untidySurvey$StudyHours[untidySurvey$StudyHours == "30.5"] <- 31
+
+#Checking the StudyHours column again for any misses
+unique(untidySurvey$StudyHours)
+
+#Setting the column to numeric values then verifying output
+
+untidySurvey$StudyHours <- as.numeric(untidySurvey$StudyHours)
+str(untidySurvey$StudyHours)
+```
+
+### Problem 4: Shouldn't msppm, Msppm and MSPPM all be the same thing?
+
+This exercise picks up from Problem 3, and walks you through two different approaches to cleaning up the Program column
+
+##### (a) Identifying the problem.
+
+Use the `table` or `levels` command on the Program column to figure out what went wrong with this column.  Describe the problem in the space below.
+
+```{r question 4a}
+# Edit me
+table(untidySurvey$Program)
+```
+
+**Description of the problem:**
+<font color="#157515"><b>
+
+The same programs are inconsistent in how they capitalize letters leading to inconsistent data.
+
+</font></b>
+
+##### (b) `toupper` approach
+
+The `toupper` function takes an array of character strings and converts all letters to uppercase.
+
+Use `toupper()` and/or `mutate()` to clean the data.  
+
+```{r question 4b}
+# Edit me
+untidySurvey$Program <- toupper(untidySurvey$Program)
+print(untidySurvey$Program)
+```
+
+**Tip**: *The `toupper()` and `tolower()` functions are often very useful in data cleaning tasks.  You may want to start by running these functions even if you'll have to do some more spot-cleaning later on.*
+
+### Problem 5: Writing simple functions
+
+##### (a) custom conversion function
+
+You work for a company that uses both English and metric measurements. Write a function with 2 arguments, the first value in inches and the second value in meters (both positive values, lengths cannot be negative). Compare these values to determine if they are equal (return a boolean TRUE or FALSE). It might be useful to convert both arguments to centimeters (or a unit of your choice) and compare them. For your reference, 1 inch = 2.54 cm EXACTLY. There are 100 centimeters in a meter.
+
+Write your function and then pass in the following sets of values:
+(36, 1)
+(50, 1.27)
+(60, 1.6)
+(x, y) a final pair of values of your choice, other than zero, that will evaluate to TRUE.
+
+``` {r question 5b}
+# Edit me to build your function here
+
+lengthCheck <- function(inches, meters) {
+  inchesToCM <- inches * 2.54
+  meterToCM <- meters * 100
+  
+  return(inchesToCM == meterToCM)
+}
+
+# Edit me to call your function on the four sets of values above
+lengthCheck(36, 1)
+lengthCheck(50, 1.27)
+lengthCheck(60, 1.6)
+lengthCheck(10, 0.254)
+```
+
+##### (b) function to calculate the total number of seconds
+
+Given three values (and therefore three arguments in your function): hours, minutes and seconds, calculate the total number of seconds.
+
+Write the function and solve for the following combinations:
+11 seconds
+38 minutes, 4 seconds
+11 hours, 52 minutes and 19 seconds
+
+``` {r question 5a}
+# Edit me to insert your function here
+secondsCalculator <- function(hours, minutes, seconds){
+  totalSeconds <- 0
+  
+  hourToSeconds <- hours * 3600
+  minuteToSeconds <- minutes * 60
+  
+  totalSeconds <- sum(hourToSeconds, minuteToSeconds, seconds)
+  
+  return(totalSeconds)
+}
+  
+# Edit me to call your function to solve 3 combinations
+secondsCalculator(0, 0, 11)
+secondsCalculator(0, 38, 4)
+secondsCalculator(11, 52, 19)
+
+```
+
+Please complete, save your script and knit your homework as html output, be sure your name is in the YAML header, and submit the html on Canvas with your AndrewID in the file name.
